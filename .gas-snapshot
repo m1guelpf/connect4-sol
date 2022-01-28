@@ -1,0 +1,6 @@
+testCanChallengePlayer() (gas: 112976)
+testCanMakeMove() (gas: 161398)
+testCanWinGame() (gas: 221890)
+testCannotMakeMoveOnInvalidColumn() (gas: 200790)
+testCannotMakeMoveOnInvalidRow() (gas: 113128)
+testPlayersMustTakeTurns() (gas: 174119)
