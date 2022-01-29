@@ -7,3 +7,6 @@
 [submodule "lib/base64"]
 	path = lib/base64
 	url = https://github.com/Brechtpd/base64
+[submodule "lib/StringUtils"]
+	path = lib/StringUtils
+	url = https://github.com/zac-williamson/StringUtils
