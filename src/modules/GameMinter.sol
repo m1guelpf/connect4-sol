@@ -6,15 +6,26 @@ import "../ConnectFour.sol";
 import "solmate/tokens/ERC721.sol";
 import "StringUtils/StringUtils.sol";
 
+/// @title Connect 4 Game Minter
+/// @author Miguel Piedrafita
+/// @notice A contract that mints winning connect 4 games, and generates SVGs representing the board
 contract GameMinter is ERC721("Connect 4", "CONN4"), StringUtils {
+    /// ERRORS ///
+
+    /// @notice Thrown when the game cannot be minted, which can happen if the game doesn't exist, is still in progress, or you didn't win.
     error CannotMintGame();
 
+    /// @notice The address of the Connect 4 contract
     ConnectFour public immutable connect4;
 
+    /// @notice Deploys a GameMinter instance, pointing to the specified Connect 4 address
+    /// @param _connect4 The address of the Connect 4 contract you want to integrate with.
     constructor(ConnectFour _connect4) {
         connect4 = _connect4;
     }
 
+    /// @notice Mints a new Connect4 NFT, based on a game you won
+    /// @param gameId The ID of the game you're trying to mint, which will also be your tokenId
     function mint(uint256 gameId) public payable {
         (address player1, address player2, , bool finished) = connect4.getGame(
             gameId
@@ -26,6 +37,8 @@ contract GameMinter is ERC721("Connect 4", "CONN4"), StringUtils {
         _mint(msg.sender, gameId);
     }
 
+    /// @dev Generates an SVG representing the Connect 4 board, for internal use
+    /// @param id The ID of the game you're trying to represent
     function drawBoard(uint256 id) internal view returns (string memory) {
         (uint64 player1Board, uint64 player2Board) = connect4.getBoards(id);
 
@@ -88,6 +101,8 @@ contract GameMinter is ERC721("Connect 4", "CONN4"), StringUtils {
         return string(abi.encodePacked("data:image/svg+xml;base64,", encoded));
     }
 
+    /// @notice Returns on-chain metadata for this NFT, including a generated board SVG
+    /// @param id The ID of the token you're trying to look up, which should match the ID of the game you won
     function tokenURI(uint256 id) public view override returns (string memory) {
         (address player1, address player2, , ) = connect4.getGame(id);
         address winner = connect4.didPlayerWin(id, 0) ? player1 : player2;
