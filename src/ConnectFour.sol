@@ -138,4 +138,10 @@ contract ConnectFour {
 
         return false;
     }
+
+    function getBoards(uint256 gameId) public view returns (uint64, uint64) {
+        uint64[2] memory boards = getGame[gameId].board;
+
+        return (boards[0], boards[1]);
+    }
 }
