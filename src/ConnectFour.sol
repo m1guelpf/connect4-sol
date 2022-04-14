@@ -127,7 +127,7 @@ contract ConnectFour {
 		unchecked {
 			for (uint8 i = 0; i < 4; i++) {
 				bb = board & (board >> directions[i]);
-				if ((bb & (bb >> (2 * directions[i]))) != 0) return true;
+				if ((bb & (bb >> (directions[i] << 1))) != 0) return true;
 			}
 		}
 
