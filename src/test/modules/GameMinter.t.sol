@@ -23,7 +23,9 @@ contract GameMinterTest is DSTest {
 
 	function testCanMintFinishedGame() public {
 		uint256 gameId = _getFinishedGame();
-		assertEq(nft.ownerOf(gameId), address(0));
+
+		hevm.expectRevert("NOT_MINTED");
+		nft.ownerOf(gameId);
 
 		nft.mint(gameId);
 
@@ -33,23 +35,29 @@ contract GameMinterTest is DSTest {
 	function testCannotMintUnfinishedGame() public {
 		hevm.prank(address(user));
 		uint256 gameId = game.challenge(address(this));
-		assertEq(nft.ownerOf(gameId), address(0));
+
+		hevm.expectRevert("NOT_MINTED");
+		nft.ownerOf(gameId);
 
 		hevm.expectRevert(GameMinter.CannotMintGame.selector);
 		nft.mint(gameId);
 
-		assertEq(nft.ownerOf(gameId), address(0));
+		hevm.expectRevert("NOT_MINTED");
+		nft.ownerOf(gameId);
 	}
 
 	function testLoserCannotMintFinishedGame() public {
 		uint256 gameId = _getFinishedGame();
-		assertEq(nft.ownerOf(gameId), address(0));
+
+		hevm.expectRevert("NOT_MINTED");
+		nft.ownerOf(gameId);
 
 		hevm.prank(address(user));
 		hevm.expectRevert(GameMinter.CannotMintGame.selector);
 		nft.mint(gameId);
 
-		assertEq(nft.ownerOf(gameId), address(0));
+		hevm.expectRevert("NOT_MINTED");
+		nft.ownerOf(gameId);
 	}
 
 	function _getFinishedGame() internal returns (uint256) {
